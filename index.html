@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заброшенная Усадьба — Интерактивный Хоррор</title>
+    <meta name="description" content="Погрузитесь в атмосферный интерактивный хоррор-квест с ветвящимся сюжетом, звуковым сопровождением и скрытыми концовками. Разгадайте тайну старого особняка.">
+    <meta name="author" content="Lord & Antigravity">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Atmospheric background elements -->
+    <div id="game-bg" class="bg-overlay" style="background-image: url('assets/scene1_bus_stop.jpg');"></div>
+    <div class="vignette"></div>
+    <div class="horror-pulse"></div>
+
+    <!-- MAIN MENU -->
+    <section id="main-menu" class="menu-screen">
+        <header class="menu-title-container">
+            <h1 id="main-title" class="menu-title">ЗАБРОШЕННАЯ УСАДЬБА</h1>
+            <p class="menu-subtitle">Интерактивный Хоррор</p>
+        </header>
+        
+        <main class="menu-buttons">
+            <button id="start-btn" class="menu-btn">Начать игру</button>
+            <button id="credits-btn" class="menu-btn">Создатели</button>
+        </main>
+        
+        <p style="margin-top: 30px; font-size: 0.8rem; color: var(--text-gray); font-family: 'Montserrat', sans-serif;">
+            ⚠️ Рекомендуется играть в наушниках со включенным звуком
+        </p>
+
+        <footer class="menu-footer">
+            © 2026. Специально для Лорда.
+        </footer>
+    </section>
+
+    <!-- CREDITS MODAL -->
+    <section id="credits-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Создатели игры</h3>
+            <p><strong>Сценарий:</strong> Лорд</p>
+            <p><strong>Код и атмосфера:</strong> Antigravity (Gemini CLI)</p>
+            <p><strong>Саундтрек:</strong> процедурная генерация звука через Web Audio API</p>
+            <p><strong>Иллюстрации:</strong> Нейросеть Imagen</p>
+            <button id="close-credits" class="menu-btn close-btn">Назад</button>
+        </div>
+    </section>
+
+    <!-- GAMEPLAY AREA -->
+    <div id="game-container" class="container hidden">
+        
+        <!-- TOP CONTROL PANEL -->
+        <header class="top-bar">
+            <div class="controls">
+                <button id="mute-btn" class="mute-btn" aria-label="Включить или выключить звук">
+                    <span class="icon">🔊</span> Звук вкл.
+                </button>
+                <div class="control-item">
+                    <span>Громкость:</span>
+                    <input id="volume-slider" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Регулировка громкости">
+                </div>
+                <div class="control-item">
+                    <span>Скорость текста:</span>
+                    <input id="text-speed-slider" type="range" min="5" max="80" step="5" value="35" aria-label="Скорость вывода текста">
+                </div>
+            </div>
+
+            <!-- INVENTORY DISPLAY -->
+            <div class="inventory-container hidden">
+                <span>Рюкзак:</span>
+                <div id="inventory-list" class="inventory-list">
+                    <span id="item-knife" class="inventory-item hidden">🔪 Охотничий нож</span>
+                    <span id="item-journal" class="inventory-item hidden">📰 Старый журнал</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- NOVEL PANEL -->
+        <main class="gameplay-box">
+            <section id="novel-card" class="vn-card">
+                <h2 id="scene-title" class="scene-title">Сцена 1: Вечер на остановке</h2>
+                <div id="story-text" class="story-text">
+                    Загрузка истории...
+                </div>
+            </section>
+
+            <!-- CHOICES CONTAINER -->
+            <section id="choices-container" class="choices-container hidden">
+                <!-- Buttons will be generated dynamically -->
+            </section>
+        </main>
+        
+        <!-- Placeholder footer for symmetry -->
+        <div></div>
+    </div>
+
+    <!-- Audio and game logic loading -->
+    <script src="sound.js"></script>
+    <script src="story.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
