@@ -10,8 +10,7 @@
 </head>
 <body>
 
-    <!-- Atmospheric background elements -->
-    <div id="game-bg" class="bg-overlay" style="background-image: url('assets/scene1_bus_stop.jpg');"></div>
+    <!-- Spooky vignettes and overlays -->
     <div class="vignette"></div>
     <div class="horror-pulse"></div>
 
@@ -62,14 +61,14 @@
                     <input id="volume-slider" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Регулировка громкости">
                 </div>
                 <div class="control-item">
-                    <span>Скорость текста:</span>
-                    <input id="text-speed-slider" type="range" min="5" max="80" step="5" value="35" aria-label="Скорость вывода текста">
+                    <span>Текст:</span>
+                    <input id="text-speed-slider" type="range" min="5" max="60" step="5" value="25" aria-label="Скорость вывода текста">
                 </div>
             </div>
 
             <!-- INVENTORY DISPLAY -->
             <div class="inventory-container hidden">
-                <span>Рюкзак:</span>
+                <span>Инвентарь:</span>
                 <div id="inventory-list" class="inventory-list">
                     <span id="item-knife" class="inventory-item hidden">🔪 Охотничий нож</span>
                     <span id="item-journal" class="inventory-item hidden">📰 Старый журнал</span>
@@ -77,26 +76,34 @@
             </div>
         </header>
 
-        <!-- NOVEL PANEL -->
-        <main class="gameplay-box">
-            <section id="novel-card" class="vn-card">
-                <h2 id="scene-title" class="scene-title">Сцена 1: Вечер на остановке</h2>
-                <div id="story-text" class="story-text">
-                    Загрузка истории...
-                </div>
-            </section>
+        <!-- NATIVE 16:9 VIEWPORT ENGINE (TINY BUNNY STYLE) -->
+        <main class="viewport-wrapper">
+            <section id="game-viewport" class="game-viewport">
+                <!-- Background Image layer -->
+                <div id="game-bg" class="bg-overlay"></div>
+                
+                <!-- Point and Click Hotspots layer -->
+                <div id="hotspots-container" class="hotspots-overlay"></div>
 
-            <!-- CHOICES CONTAINER -->
-            <section id="choices-container" class="choices-container hidden">
-                <!-- Buttons will be generated dynamically -->
+                <!-- Text overlay dialog box -->
+                <article id="novel-card" class="vn-textbox">
+                    <h2 id="scene-title" class="scene-title">Сцена 1: Вечер на остановке</h2>
+                    <div id="story-text" class="story-text">Загрузка истории...</div>
+                    <div id="click-prompt" class="click-prompt hidden">▼</div>
+                </article>
+
+                <!-- Fullscreen Overlay Choices (for resets/endings with no images) -->
+                <section id="choices-container" class="viewport-choices hidden">
+                    <!-- Buttons generated dynamically -->
+                </section>
             </section>
         </main>
         
-        <!-- Placeholder footer for symmetry -->
-        <div></div>
+        <!-- Empty footer for spacing -->
+        <footer></footer>
     </div>
 
-    <!-- Audio and game logic loading -->
+    <!-- Scripts loading -->
     <script src="sound.js"></script>
     <script src="story.js"></script>
     <script src="script.js"></script>
