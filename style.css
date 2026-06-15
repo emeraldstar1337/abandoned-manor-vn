@@ -321,30 +321,21 @@ body, html {
     align-items: center;
     width: 100%;
     overflow: hidden;
+    position: relative;
     padding: 10px 0;
 }
 
 .game-viewport {
-    position: relative;
-    width: 100%;
-    max-width: 1000px;
-    /* Aspect ratio fallback for old browsers */
-    max-height: 56.25vw;
-    aspect-ratio: 16 / 9;
+    position: absolute;
+    width: 1000px;
+    height: 562.5px;
     background-color: #010102;
-    border: 2px solid rgba(201, 28, 28, 0.35);
-    border-radius: 8px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(201, 28, 28, 0.45);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(201, 28, 28, 0.15);
     overflow: hidden;
     z-index: 20;
-}
-
-@media (min-aspect-ratio: 16/9) {
-    /* Limit height on landscape screens to prevent vertical cutoffs */
-    .game-viewport {
-        height: calc(100vh - 110px);
-        width: calc((100vh - 110px) * 16 / 9);
-    }
+    transform-origin: center center;
 }
 
 .bg-overlay {
@@ -371,73 +362,48 @@ body, html {
     position: absolute;
     pointer-events: auto;
     cursor: pointer;
-    border: 1px solid rgba(201, 28, 28, 0.4);
-    background: rgba(201, 28, 28, 0.08);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(201, 28, 28, 0.15), inset 0 0 5px rgba(201, 28, 28, 0.08);
-    animation: hotspotPulse 2s infinite ease-in-out;
+    border: 1px solid rgba(201, 28, 28, 0.65);
+    background: rgba(10, 10, 15, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(201, 28, 28, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-white);
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: hotspotPulse 2s infinite ease-in-out;
+    padding: 6px 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-sizing: border-box;
 }
 
 .hotspot:hover {
-    background: rgba(201, 28, 28, 0.28);
+    background: rgba(201, 28, 28, 0.25);
     border-color: var(--primary-red);
-    box-shadow: 0 0 20px rgba(201, 28, 28, 0.5), inset 0 0 8px rgba(201, 28, 28, 0.2);
-    transform: scale(1.06);
-}
-
-.hotspot::after {
-    content: '🔍';
-    font-size: clamp(0.7rem, 1.5vw, 1.1rem);
-    opacity: 0.7;
-    transition: opacity 0.3s;
-}
-
-.hotspot:hover::after {
-    opacity: 1;
+    box-shadow: 0 0 25px rgba(201, 28, 28, 0.55), inset 0 0 8px rgba(201, 28, 28, 0.2);
+    transform: scale(1.05);
 }
 
 @keyframes hotspotPulse {
     0% {
-        box-shadow: 0 0 8px rgba(201, 28, 28, 0.15);
-        border-color: rgba(201, 28, 28, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 6px rgba(201, 28, 28, 0.2);
+        border-color: rgba(201, 28, 28, 0.55);
     }
     50% {
-        box-shadow: 0 0 18px rgba(201, 28, 28, 0.45);
-        border-color: rgba(201, 28, 28, 0.7);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 18px rgba(201, 28, 28, 0.5);
+        border-color: rgba(201, 28, 28, 0.95);
     }
     100% {
-        box-shadow: 0 0 8px rgba(201, 28, 28, 0.15);
-        border-color: rgba(201, 28, 28, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 6px rgba(201, 28, 28, 0.2);
+        border-color: rgba(201, 28, 28, 0.55);
     }
-}
-
-/* Hover labels for point and click targets */
-.hotspot-label {
-    position: absolute;
-    bottom: -32px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(5, 5, 8, 0.9);
-    color: var(--text-white);
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: clamp(0.6rem, 1.1vw, 0.78rem);
-    font-weight: 500;
-    white-space: nowrap;
-    border: 1px solid var(--primary-red);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    pointer-events: none;
-}
-
-.hotspot:hover .hotspot-label {
-    opacity: 1;
 }
 
 /* Visual Novel Textbox */
@@ -447,49 +413,47 @@ body, html {
     left: 2.5%;
     width: 95%;
     height: 31%;
-    background: var(--bg-card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(201, 28, 28, 0.32);
-    border-radius: 6px;
-    padding: clamp(10px, 1.8vw, 18px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85);
+    background: linear-gradient(135deg, rgba(8, 8, 12, 0.96) 0%, rgba(18, 5, 5, 0.96) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(201, 28, 28, 0.45);
+    border-top: 3px solid var(--primary-red);
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: inset 0 0 15px rgba(201, 28, 28, 0.08), 0 10px 40px rgba(0, 0, 0, 0.95);
     display: flex;
     flex-direction: column;
     z-index: 40;
     cursor: pointer;
-    transition: border-color var(--transition-speed);
+    transition: all var(--transition-speed) ease;
 }
 
 .vn-textbox:hover {
-    border-color: rgba(201, 28, 28, 0.55);
+    border-color: rgba(201, 28, 28, 0.75);
+    box-shadow: inset 0 0 20px rgba(201, 28, 28, 0.12), 0 10px 45px rgba(0, 0, 0, 0.98);
 }
 
+/* Hide scene title as requested by Lord to leave only dialogue text */
 .scene-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: clamp(0.65rem, 1.1vw, 0.88rem);
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--primary-red);
-    border-bottom: 1px solid rgba(201, 28, 28, 0.2);
-    padding-bottom: 4px;
-    margin-bottom: 6px;
+    display: none !important;
 }
 
-/* Dialogue body with auto scrolling to fix "уплывание" */
+/* Dialogue body with auto scrolling */
 .story-text {
-    font-size: clamp(0.78rem, 1.35vw, 1.1rem);
-    line-height: 1.45;
-    color: var(--text-white);
-    letter-spacing: 0.1px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #f0f0f4;
+    letter-spacing: 0.3px;
     overflow-y: auto;
-    height: calc(100% - 22px);
+    height: 100%;
     padding-right: 6px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .story-text i {
-    color: #ffc2c2;
+    color: #ff9e9e;
+    font-style: italic;
+    font-weight: 500;
 }
 
 /* Custom scrollbar to keep it sleek */
@@ -508,10 +472,10 @@ body, html {
 
 /* Typewriter blinker cursor */
 .story-text::after {
-    content: '▌';
+    content: ' ▌';
     color: var(--primary-red);
-    margin-left: 3px;
     animation: cursorBlink 0.9s infinite;
+    text-shadow: 0 0 5px var(--primary-red);
 }
 
 @keyframes cursorBlink {
@@ -522,15 +486,16 @@ body, html {
 /* Blink dialog click indicator */
 .click-prompt {
     position: absolute;
-    bottom: 8px;
-    right: 15px;
-    font-size: clamp(0.7rem, 1.2vw, 0.95rem);
+    bottom: 10px;
+    right: 18px;
+    font-size: 14px;
     color: var(--primary-red);
     animation: promptPulse 1.2s infinite ease-in-out;
+    text-shadow: 0 0 8px var(--primary-glow);
 }
 
 @keyframes promptPulse {
-    0%, 100% { opacity: 0.2; transform: translateY(0); }
+    0%, 100% { opacity: 0.3; transform: translateY(0); }
     50% { opacity: 1; transform: translateY(3px); }
 }
 
@@ -541,62 +506,43 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(5, 5, 8, 0.82);
-    backdrop-filter: blur(8px);
+    background: radial-gradient(circle, rgba(12,8,8,0.88) 0%, rgba(3,3,5,0.98) 90%);
+    backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     z-index: 45;
     padding: 20px;
 }
 
 .choice-btn {
-    background: rgba(10, 10, 15, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(135deg, rgba(15, 15, 22, 0.9) 0%, rgba(26, 10, 10, 0.9) 100%);
+    border: 1px solid rgba(201, 28, 28, 0.45);
     color: var(--text-white);
-    padding: clamp(10px, 1.8vw, 16px) clamp(20px, 3vw, 32px);
-    border-radius: 6px;
+    padding: 14px 28px;
+    border-radius: 8px;
     font-family: 'Montserrat', sans-serif;
-    font-size: clamp(0.78rem, 1.3vw, 0.95rem);
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
     text-align: center;
-    width: 90%;
-    max-width: 450px;
+    width: 85%;
+    max-width: 420px;
     cursor: pointer;
-    transition: all var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 10px rgba(201, 28, 28, 0.1);
 }
 
 .choice-btn:hover {
-    background: rgba(201, 28, 28, 0.15);
+    background: rgba(201, 28, 28, 0.22);
     border-color: var(--primary-red);
-    box-shadow: 0 0 20px rgba(201, 28, 28, 0.35);
-    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(201, 28, 28, 0.5), inset 0 0 10px rgba(201, 28, 28, 0.2);
+    transform: scale(1.03) translateY(-1px);
 }
 
 .choice-btn:active {
-    transform: scale(0.99);
-}
-
-/* Responsive constraints */
-@media (max-width: 600px) {
-    .container {
-        padding: 8px;
-    }
-    
-    .top-bar {
-        justify-content: center;
-        gap: 6px;
-    }
-    
-    .controls, .inventory-container {
-        padding: 4px 10px;
-        border-radius: 12px;
-    }
-    
-    .vn-textbox {
-        height: 35%; /* slightly taller on mobile to accommodate text */
-    }
+    transform: scale(0.98);
 }

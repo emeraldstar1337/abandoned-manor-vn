@@ -46,6 +46,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Responsive 16:9 Viewport Scaling
+    function resizeViewport() {
+        const wrapper = document.querySelector(".viewport-wrapper");
+        const viewport = document.getElementById("game-viewport");
+        if (!wrapper || !viewport) return;
+        
+        const wWidth = wrapper.clientWidth;
+        const wHeight = wrapper.clientHeight;
+        
+        // Base viewport coordinates are designed on a 1000x562.5 canvas
+        const scaleX = wWidth / 1000;
+        const scaleY = wHeight / 562.5;
+        const scale = Math.min(scaleX, scaleY);
+        
+        viewport.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener("resize", resizeViewport);
+    resizeViewport();
+
+    // Advance dialogue by clicking on the background image (when no active interactive hotspots/choices)
+    bgImage.addEventListener("click", (e) => {
+        const node = window.storyData.nodes[currentNodeId];
+        if (!node) return;
+        const hasHotspots = node.hotspots && node.hotspots.length > 0 && !isTyping;
+        const hasChoices = node.choices && node.choices.length > 0 && !isTyping && (currentDialogueIndex === node.dialogues.length - 1);
+        if (hasHotspots || hasChoices) return;
+        
+        if (isTyping) {
+            skipTyping();
+        } else {
+            advanceDialogue();
+        }
+    });
+
     // Event Listeners
     startButton.addEventListener("click", () => {
         initAudio();
@@ -53,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         mainMenu.classList.add("hidden");
         gameContainer.classList.remove("hidden");
+        resizeViewport();
         
         loadNode("start");
     });
@@ -131,13 +166,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update inventory display
         updateInventory();
 
-        // Update background image
+        // Update background image with a smooth fade-out and fade-in transition
         if (node.image) {
-            bgImage.style.opacity = 0.4;
+            bgImage.style.opacity = 0;
             setTimeout(() => {
                 bgImage.style.backgroundImage = `url('assets/${node.image}')`;
                 bgImage.style.opacity = 1;
-            }, 200);
+            }, 350);
         }
 
         // Set Title
@@ -165,6 +200,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     case "slash":
                         window.soundEngine.playSlash();
                         break;
+                    case "crow":
+                        window.soundEngine.playCrow();
+                        break;
+                    case "sectarians":
+                        window.soundEngine.playSectariansScream();
+                        break;
+                    case "footsteps":
+                        window.soundEngine.playFootsteps();
+                        break;
                     default:
                         window.soundEngine.playClick();
                 }
@@ -187,6 +231,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (typingTimer) clearTimeout(typingTimer);
         storyText.innerHTML = "";
         isTyping = true;
+        
+
         
         const speed = parseInt(textSpeedSlider.value);
         const textParts = parseHtmlAndText(text);
@@ -299,11 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.top = `${hotspot.y}%`;
             element.style.width = `${hotspot.w}%`;
             element.style.height = `${hotspot.h}%`;
-
-            const label = document.createElement("div");
-            label.className = "hotspot-label";
-            label.textContent = hotspot.text;
-            element.appendChild(label);
+            element.textContent = hotspot.text; // Write action label directly on the button
 
             element.addEventListener("click", (e) => {
                 e.stopPropagation(); // Stop dialogue card click

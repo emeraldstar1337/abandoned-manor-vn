@@ -20,12 +20,12 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 65, y: 35, w: 30, h: 50,
+                    x: 65, y: 35, w: 30, h: 15,
                     text: "Пойти к лесу за рекой вместе с Дэном",
                     target: "scene_path"
                 },
                 {
-                    x: 10, y: 50, w: 35, h: 35,
+                    x: 10, y: 50, w: 35, h: 15,
                     text: "Вернуться домой в деревню",
                     target: "ending_coward"
                 }
@@ -56,7 +56,7 @@ window.storyData = {
             title: "Сцена 1-Б: Путь через поле",
             image: "scene1_path.jpg",
             heartbeat: 60,
-            sound: "creak",
+            sound: "footsteps",
             whispers: false,
             dialogues: [
                 "Вы спускаетесь по заросшей тропинке. С обеих сторон высится кукурузное поле. Листья зловеще шуршат на ветру.",
@@ -65,12 +65,12 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 40, y: 50, w: 20, h: 45,
+                    x: 40, y: 45, w: 20, h: 15,
                     text: "Продолжить идти к реке",
                     target: "scene2"
                 },
                 {
-                    x: 65, y: 35, w: 25, h: 55,
+                    x: 65, y: 35, w: 25, h: 15,
                     text: "Заглянуть в кукурузу на звук",
                     target: "corn_investigate"
                 }
@@ -81,7 +81,7 @@ window.storyData = {
             title: "Сцена 1-В: Что-то в кукурузе",
             image: "scene1_corn.jpg",
             heartbeat: 85,
-            sound: "screech",
+            sound: "crow",
             whispers: false,
             dialogues: [
                 "Вы раздвигаете жесткие сухие стебли и всматриваетесь в полумрак.",
@@ -91,7 +91,7 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 10, y: 65, w: 80, h: 30,
+                    x: 35, y: 30, w: 30, h: 15,
                     text: "Выйти обратно на тропу к реке",
                     target: "scene2"
                 }
@@ -111,12 +111,12 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 20, y: 55, w: 35, h: 35,
+                    x: 20, y: 45, w: 35, h: 15,
                     text: "Осмотреть рюкзак в камышах",
                     target: "scene2_a"
                 },
                 {
-                    x: 60, y: 45, w: 35, h: 25,
+                    x: 60, y: 35, w: 35, h: 15,
                     text: "Перейти реку и идти к усадьбе",
                     target: "scene_gate"
                 }
@@ -136,13 +136,13 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 55, y: 55, w: 35, h: 35,
+                    x: 55, y: 45, w: 35, h: 15,
                     text: "Изучить журналы подробнее",
                     target: "magazines_read",
                     action: (state) => { state.read_magazines = true; }
                 },
                 {
-                    x: 25, y: 10, w: 40, h: 40,
+                    x: 25, y: 20, w: 40, h: 15,
                     text: "Оставить вещи и идти к усадьбе",
                     target: "scene_gate"
                 }
@@ -162,7 +162,7 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 10, y: 10, w: 80, h: 80,
+                    x: 25, y: 30, w: 50, h: 15,
                     text: "Идти дальше к воротам усадьбы",
                     target: "scene_gate"
                 }
@@ -181,14 +181,41 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 10, y: 35, w: 35, h: 45,
+                    x: 10, y: 35, w: 35, h: 15,
                     text: "Обыскать заброшенную сторожку",
                     target: "gate_search"
                 },
                 {
-                    x: 55, y: 40, w: 35, h: 45,
-                    text: "Перелезть через сломанный забор справа",
-                    target: "scene3"
+                    x: 55, y: 35, w: 35, h: 15,
+                    text: "Взломать замок ворот монтировкой",
+                    target: "scene3",
+                    condition: (state) => state.has_crowbar
+                },
+                {
+                    x: 55, y: 35, w: 35, h: 15,
+                    text: "Перелезть через забор",
+                    target: "gate_locked",
+                    condition: (state) => !state.has_crowbar
+                }
+            ]
+        },
+
+        gate_locked: {
+            title: "Ворота усадьбы заперты",
+            image: "scene_gate.jpg",
+            heartbeat: 70,
+            sound: "thud",
+            whispers: false,
+            dialogues: [
+                "Вы пытаетесь перелезть через забор, но ржавая колючая проволока впивается в ладони. Забор слишком высокий и опасный.",
+                "Дэн качает головой: «Без шансов. Ворота заперты на тяжелую цепь. Нам нужен прочный инструмент, чтобы сбить или перекусить замок. Монтировка бы идеально подошла».",
+                "Нужно осмотреться поблизости. Может, в сторожке что-то найдется?"
+            ],
+            hotspots: [
+                {
+                    x: 35, y: 35, w: 30, h: 15,
+                    text: "Вернуться к забору",
+                    target: "scene_gate"
                 }
             ]
         },
@@ -206,13 +233,13 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 40, y: 40, w: 25, h: 35,
+                    x: 15, y: 35, w: 35, h: 15,
                     text: "Взять старую монтировку",
                     target: "scene_gate",
                     action: (state) => { state.has_crowbar = true; }
                 },
                 {
-                    x: 75, y: 30, w: 20, h: 50,
+                    x: 55, y: 35, w: 35, h: 15,
                     text: "Выйти обратно к забору",
                     target: "scene_gate"
                 }
@@ -232,19 +259,19 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 35, y: 55, w: 30, h: 35,
-                    text: "Обыскать темный коридор под лестницей",
-                    target: "scene4"
+                    x: 35, y: 55, w: 30, h: 15,
+                    text: "Подняться по шаткой лестнице наверх",
+                    target: "scene5"
                 },
                 {
-                    x: 5, y: 40, w: 25, h: 45,
+                    x: 5, y: 40, w: 25, h: 15,
                     text: "Осмотреть гостиную слева",
                     target: "piano_room"
                 },
                 {
-                    x: 70, y: 15, w: 25, h: 65,
-                    text: "Подняться по шаткой лестнице наверх",
-                    target: "scene5"
+                    x: 70, y: 15, w: 25, h: 15,
+                    text: "Обыскать темный коридор под лестницей",
+                    target: "scene4"
                 }
             ]
         },
@@ -262,12 +289,12 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 35, y: 45, w: 40, h: 30,
+                    x: 35, y: 45, w: 40, h: 15,
                     text: "Нажать на клавиши пианино",
                     target: "piano_play"
                 },
                 {
-                    x: 5, y: 30, w: 20, h: 60,
+                    x: 5, y: 30, w: 20, h: 15,
                     text: "Вернуться в центральный холл",
                     target: "scene3"
                 }
@@ -287,7 +314,7 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 10, y: 10, w: 80, h: 80,
+                    x: 25, y: 30, w: 50, h: 15,
                     text: "Выбежать обратно в холл",
                     target: "scene3"
                 }
@@ -307,10 +334,15 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 40, y: 65, w: 30, h: 20,
+                    x: 45, y: 35, w: 35, h: 15,
                     text: "Забрать охотничий нож со стола",
                     target: "scene4_grab",
                     action: (state) => { state.has_knife = true; }
+                },
+                {
+                    x: 15, y: 35, w: 25, h: 15,
+                    text: "Вернуться в центральный холл",
+                    target: "scene3"
                 }
             ]
         },
@@ -323,13 +355,13 @@ window.storyData = {
             whispers: false,
             dialogues: [
                 "Вы вытаскиваете нож из ножен. Лезвие холодно блестит в луче луны. Нож тяжелый и очень острый.",
-                "Теперь у вас есть оружие на случай опасности. Пора подниматься на второй этаж."
+                "Теперь у вас есть оружие на случай опасности. Пора возвращаться в холл."
             ],
             hotspots: [
                 {
-                    x: 10, y: 10, w: 80, h: 80,
-                    text: "Выйти в холл и подняться по лестнице",
-                    target: "scene5"
+                    x: 35, y: 35, w: 30, h: 15,
+                    text: "Выйти в холл",
+                    target: "scene3"
                 }
             ]
         },
@@ -347,7 +379,7 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 40, y: 30, w: 12, h: 25,
+                    x: 40, y: 30, w: 20, h: 15,
                     text: "Заглянуть в комнату со светом",
                     target: "scene6"
                 }
@@ -358,7 +390,7 @@ window.storyData = {
             title: "Сцена 6: Встреча в темноте",
             image: "scene6_cult_bonfire.jpg",
             heartbeat: 120,
-            sound: "jumpscare",
+            sound: "sectarians",
             whispers: true,
             dialogues: [
                 "Вы заглядываете в комнату. В центре горит костер. Вокруг него спиной к вам стоят трое в белых балахонах.",
@@ -367,18 +399,18 @@ window.storyData = {
             ],
             hotspots: [
                 {
-                    x: 5, y: 15, w: 25, h: 70,
-                    text: "Крикнуть Дэну: «В рассыпную!» и прыгнуть к окну",
+                    x: 5, y: 15, w: 25, h: 15,
+                    text: "Крикнуть Дэну: «В рассыпную!» и бежать",
                     target: "ending1"
                 },
                 {
-                    x: 75, y: 15, w: 20, h: 70,
-                    text: "Схватить Дэна и бежать обратно к лестнице вместе",
+                    x: 70, y: 15, w: 25, h: 15,
+                    text: "Схватить Дэна и бежать вместе",
                     target: "ending2"
                 },
                 {
-                    x: 35, y: 30, w: 30, h: 60,
-                    text: "Выхватить охотничий нож и броситься в бой!",
+                    x: 35, y: 30, w: 30, h: 15,
+                    text: "Выхватить охотничий нож и драться!",
                     target: "ending3",
                     condition: (state) => state.has_knife
                 }

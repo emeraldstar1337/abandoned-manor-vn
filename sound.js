@@ -405,7 +405,7 @@ class SoundEngine {
 
         noiseSource.connect(noiseFilter);
         noiseFilter.connect(noiseGain);
-        gain.connect(this.masterVolume);
+        noiseGain.connect(this.masterVolume);
         noiseSource.start(now);
     }
 
@@ -450,6 +450,7 @@ class SoundEngine {
         osc.start(now);
         noise.start(now);
         osc.stop(now + duration);
+        noise.stop(now + duration);
     }
 
     playClick() {
@@ -470,6 +471,152 @@ class SoundEngine {
 
         osc.start();
         osc.stop(this.ctx.currentTime + 0.09);
+    }
+
+    // Crow caw sound (modulated sawtooth for harsh raspy tone)
+    playCrow() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const duration = 0.5;
+        
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(550, now);
+        osc.frequency.linearRampToValueAtTime(700, now + 0.12);
+        osc.frequency.linearRampToValueAtTime(450, now + duration);
+        
+        // Low frequency oscillator to make the caw sound harsh and raspy
+        const mod = this.ctx.createOscillator();
+        const modGain = this.ctx.createGain();
+        mod.frequency.setValueAtTime(40, now);
+        modGain.gain.setValueAtTime(120, now);
+        
+        mod.connect(modGain);
+        modGain.connect(osc.frequency);
+        
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(950, now);
+        filter.Q.setValueAtTime(1.4, now);
+        
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.18, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterVolume);
+        
+        osc.start(now);
+        mod.start(now);
+        osc.stop(now + duration);
+        mod.stop(now + duration);
+    }
+
+    // Terrifying sectarian screamer scream (multi-oscillator screech and noise burst)
+    playSectariansScream() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const duration = 2.2;
+        
+        // Noise burst for breathy/screamy texture
+        const bufferSize = this.ctx.sampleRate * duration;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        const noiseSource = this.ctx.createBufferSource();
+        noiseSource.buffer = buffer;
+        
+        const noiseFilter = this.ctx.createBiquadFilter();
+        noiseFilter.type = 'bandpass';
+        noiseFilter.frequency.setValueAtTime(1300, now);
+        noiseFilter.Q.setValueAtTime(1.8, now);
+        
+        const noiseGain = this.ctx.createGain();
+        noiseGain.gain.setValueAtTime(0, now);
+        noiseGain.gain.linearRampToValueAtTime(0.32, now + 0.1);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        
+        noiseSource.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(this.masterVolume);
+        noiseSource.start(now);
+        
+        // Screeching detuned voices
+        for (let i = 0; i < 4; i++) {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            const filter = this.ctx.createBiquadFilter();
+            
+            osc.type = 'sawtooth';
+            const baseFreq = 750 + i * 130 + Math.random() * 40;
+            osc.frequency.setValueAtTime(baseFreq, now);
+            osc.frequency.linearRampToValueAtTime(baseFreq * 0.55, now + duration);
+            
+            // Extreme vibrato/tremolo
+            const lfo = this.ctx.createOscillator();
+            const lfoGain = this.ctx.createGain();
+            lfo.frequency.setValueAtTime(14 + Math.random() * 4, now);
+            lfoGain.gain.setValueAtTime(90, now);
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc.frequency);
+            
+            filter.type = 'peaking';
+            filter.frequency.setValueAtTime(1800, now);
+            filter.Q.setValueAtTime(1.2, now);
+            
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.15, now + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+            
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.masterVolume);
+            
+            osc.start(now);
+            lfo.start(now);
+            osc.stop(now + duration);
+            lfo.stop(now + duration);
+        }
+    }
+
+    // Footsteps sound (dirt/gravel rustles)
+    playFootsteps() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        
+        // Schedule 4 distinct footsteps
+        for (let step = 0; step < 4; step++) {
+            const stepTime = now + step * 0.45;
+            
+            const bufferSize = this.ctx.sampleRate * 0.16;
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            const noiseSource = this.ctx.createBufferSource();
+            noiseSource.buffer = buffer;
+            
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(260, stepTime);
+            filter.Q.setValueAtTime(3.2, stepTime);
+            
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0, stepTime);
+            gain.gain.linearRampToValueAtTime(0.12, stepTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, stepTime + 0.13);
+            
+            noiseSource.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.masterVolume);
+            noiseSource.start(stepTime);
+        }
     }
 }
 
